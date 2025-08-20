@@ -26,7 +26,7 @@ struct Args {
     width: i32,
 
     /// Window height in pixels
-    #[arg(short = 'h', long = "height", default_value_t = 56i32)]
+    #[arg(short = 'H', long = "height", default_value_t = 56i32)]
     height: i32,
 
     /// Font family name to use

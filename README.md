@@ -46,7 +46,7 @@ Options:
   -t, --text <TEXT>                    Initial text value
   -T, --tooltip <TOOLTIP>              Tooltip text (on hover)
   -w, --width <WIDTH>                  Window width (px) [default: 520]
-  -h, --height <HEIGHT>                Window height (px) [default: 56]
+  -H, --height <HEIGHT>                Window height (px) [default: 56]
   -f, --font <FONT>                    Font family [default: Inconsolata]
   -s, --font-size <FONT_SIZE>          Font size (pt) [default: 14]
       --bg <BG>                        Background color [default: #1e1e2e]
