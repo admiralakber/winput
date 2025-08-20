@@ -1,17 +1,16 @@
-# winput
+# winput ✨
 
-Slick, minimal GUI input box for Wayland/Sway (GTK4). Type text, press Enter → winput prints to stdout and exits. Escape exits with code 1 and no output. Perfect for piping into `xargs` or `swaymsg`.
+Slick, minimal GUI input box for Wayland/Sway (GTK4). Type, hit Enter, get clean stdout. Pipe it into power.
 
 Inspired by `i3-input` (see the man page). Designed to feel native on Sway with a clean, flat aesthetic.
 
 Note: This project was fully created by the Cursor agent CLI running GPT‑5, directed by `admiralakber`.
 
 ## Features
-- Flat, modern dark UI (fully themeable)
-- Monospace look with Inconsolata by default (configurable)
-- Enter: print to stdout, exit 0
-- Escape: exit 1 (no output)
-- Tooltip, placeholder, initial text, size, font, colors, and rounding via CLI flags
+- Modern, flat dark UI (theme via flags)
+- Monospace default (Inconsolata) for minimal distraction
+- Enter: print to stdout, exit 0; Escape: exit 1, no output
+- Tooltips, placeholder, initial text, font, colors, radius, size
 
 ## Build and run (NixOS recommended)
 
@@ -61,22 +60,23 @@ Options:
 
 ## Sway usage
 
-Analogue to `i3-input` for marking and jumping between windows:
-
+### Quick bindings (simple and effective)
 ```bash
-# Mark the focused container with a name you type
-winput --placeholder "mark name" | xargs -r -I{} swaymsg mark -- "{}"
-
-# Jump focus to a container by its mark
-winput --placeholder "jump to mark" | xargs -r -I{} swaymsg '[con_mark="{}"] focus'
+# mark and jump
+bindsym $mod+Shift+g exec winput --placeholder "mark" | xargs -I{} swaymsg "mark {}"
+bindsym $mod+g        exec winput --placeholder "jump to mark" | xargs -I{} swaymsg '[con_mark="{}"] focus'
 ```
+
+Tips:
+- If you prefer to skip executing when input is empty, add `-r` to xargs.
+- If Sway’s environment lacks `~/.cargo/bin` in PATH, use the absolute path: `$HOME/.cargo/bin/winput`.
 
 General command runner binding:
 ```bash
 bindsym $mod+g exec sh -c 'cmd="$(winput --placeholder Run:)"; [ -n "$cmd" ] && sh -c "$cmd"'
 ```
 
-Pipe to `swaymsg` directly:
+### Pipe to `swaymsg` directly
 ```bash
 winput --placeholder "swaymsg command" --newline | xargs -r -I{} swaymsg -- {}
 ```
