@@ -1,0 +1,10 @@
+[package]
+name = "winput"
+version = "0.1.0"
+edition = "2021"
+description = "Minimal Wayland-friendly GUI prompt: type and press Enter to emit text to stdout"
+license = "MIT"
+
+[dependencies]
+gtk4 = "0.8"
+clap = { version = "4.5", features = ["derive"] }
