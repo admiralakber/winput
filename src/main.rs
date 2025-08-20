@@ -1,6 +1,8 @@
 use clap::Parser;
 use gtk4::prelude::*;
 use gtk4::{Application, ApplicationWindow, CssProvider, Entry};
+use gtk4::glib::{self, OptionArg, OptionFlags};
+use gtk4::gio::ApplicationFlags;
 use gtk4::{Align, Orientation};
 use gtk4::{Box as GtkBox};
 use std::io::{self, Write};
@@ -66,7 +68,92 @@ fn main() {
     let args = Args::parse();
 
     // Use a fixed app id for Wayland portals focus handling; not strictly required.
-    let app = Application::builder().application_id("dev.brat.winput").build();
+    let app = Application::builder()
+        .application_id("dev.brat.winput")
+        .flags(ApplicationFlags::NON_UNIQUE)
+        .build();
+
+    // Register known options with GApplication so it doesn't reject them.
+    // This prevents "Unknown option" errors when GTK parses argv.
+    app.add_main_option(
+        "placeholder",
+        b'p'.into(),
+        OptionFlags::NONE,
+        OptionArg::String,
+        "Placeholder text inside the input",
+        Some("TEXT"),
+    );
+    app.add_main_option(
+        "text",
+        b't'.into(),
+        OptionFlags::NONE,
+        OptionArg::String,
+        "Initial text value",
+        Some("TEXT"),
+    );
+    app.add_main_option(
+        "tooltip",
+        b'T'.into(),
+        OptionFlags::NONE,
+        OptionArg::String,
+        "Tooltip text (shown on hover)",
+        Some("TEXT"),
+    );
+    app.add_main_option(
+        "width",
+        b'w'.into(),
+        OptionFlags::NONE,
+        OptionArg::Int,
+        "Window width in pixels",
+        Some("PX"),
+    );
+    app.add_main_option(
+        "height",
+        b'H'.into(),
+        OptionFlags::NONE,
+        OptionArg::Int,
+        "Window height in pixels",
+        Some("PX"),
+    );
+    app.add_main_option(
+        "font",
+        b'f'.into(),
+        OptionFlags::NONE,
+        OptionArg::String,
+        "Font family name to use",
+        Some("NAME"),
+    );
+    app.add_main_option(
+        "font-size",
+        b's'.into(),
+        OptionFlags::NONE,
+        OptionArg::Int,
+        "Font size in points",
+        Some("PT"),
+    );
+    app.add_main_option("bg", 0u8.into(), OptionFlags::NONE, OptionArg::String, "Background color", Some("CSS"));
+    app.add_main_option("fg", 0u8.into(), OptionFlags::NONE, OptionArg::String, "Foreground color", Some("CSS"));
+    app.add_main_option("accent", 0u8.into(), OptionFlags::NONE, OptionArg::String, "Accent color", Some("CSS"));
+    app.add_main_option("radius", 0u8.into(), OptionFlags::NONE, OptionArg::Int, "Corner radius", Some("PX"));
+    app.add_main_option(
+        "decorated",
+        0u8.into(),
+        OptionFlags::NONE,
+        OptionArg::None,
+        "Show window decorations",
+        None,
+    );
+    app.add_main_option(
+        "newline",
+        0u8.into(),
+        OptionFlags::NONE,
+        OptionArg::None,
+        "Print trailing newline after text",
+        None,
+    );
+
+    // Tell GApplication to accept our CLI options and continue normal startup.
+    app.connect_handle_local_options(|_, _| -1);
 
     app.connect_activate(move |app| {
         // CSS styling: flat, dark, rounded, monospace, modern.

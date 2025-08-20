@@ -1,6 +1,6 @@
 [package]
 name = "winput"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Minimal Wayland-friendly GUI prompt: type and press Enter to emit text to stdout"
 license = "MIT"
